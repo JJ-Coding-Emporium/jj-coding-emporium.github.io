@@ -12,22 +12,12 @@
     
     
     <item>
-      <title>My First Post</title>
-      <link>https://jj-coding-emporium.github.io/posts/my-first-post/</link>
+      <title>Concurrency: Go vs. Node</title>
+      <link>https://jj-coding-emporium.github.io/posts/concurrency-go-vs.-node/</link>
       <pubDate>Tue, 27 Nov 2018 08:13:10 -0800</pubDate>
       
-      <guid>https://jj-coding-emporium.github.io/posts/my-first-post/</guid>
-      <description>Hello World</description>
-    </item>
-    
-    <item>
-      <title>My Second Post</title>
-      <link>https://jj-coding-emporium.github.io/posts/my-second-post/</link>
-      <pubDate>Tue, 27 Nov 2018 08:13:10 -0800</pubDate>
-      
-      <guid>https://jj-coding-emporium.github.io/posts/my-second-post/</guid>
-      <description>Hello World
-My name is Jordan blah</description>
+      <guid>https://jj-coding-emporium.github.io/posts/concurrency-go-vs.-node/</guid>
+      <description>Go 199 200 201 202 203 204 205 206 207 208 209 210 211 212 213 214 215 216 217 218 219 220 221 222 223 224 225 226 227 228 229 230  package main import ( &amp;#34;io/ioutil&amp;#34; &amp;#34;log&amp;#34; &amp;#34;net/http&amp;#34; &amp;#34;github.com/gorilla/mux&amp;#34; ) func getUser(username string) string { response, _ := http.Get(&amp;#34;https://api.github.com/users/&amp;#34; + username) responseData, _ := ioutil.ReadAll(response.Body) userData := string(responseData) return userData } func GithubHandler(w http.ResponseWriter, req *http.Request) { params := mux.</description>
     </item>
     
   </channel>
