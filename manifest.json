@@ -14,12 +14,16 @@
     "sizes": "96x96",
     "type": "image/png"
   }, {
-    "src": "/appicons/favicon-128.png",
+    "src": "/appicons/favicon-128x128.png",
     "sizes": "128x128",
     "type": "image/png"
   }, {
     "src": "/appicons/favicon-196x196.png",
     "sizes": "196x196",
+    "type": "image/png"
+  }, {
+    "src": "/appicons/favicon-512x512.png",
+    "sizes": "512x512",
     "type": "image/png"
   }],
   "start_url": "/index.html",
