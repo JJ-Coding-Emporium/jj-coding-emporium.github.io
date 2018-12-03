@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer">
+    
+
+    
+      <link href='https://fonts.googleapis.com/css?family=Open+Sans:400|Old+Standard+TT:400' rel='stylesheet' type='text/css'>
+    
+
+    <link rel="icon" type="image/png" href="https://jj-coding-emporium.github.io/favicon_16x16.png" sizes="16x16">
+    <link rel="icon" type="image/png" href="https://jj-coding-emporium.github.io/favicon_32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="https://jj-coding-emporium.github.io/favicon_128x128.png" sizes="128x128">
+    <link rel="manifest" href="https://jj-coding-emporium.github.io/manifest.json">
+
+    <title>
+      
+      
+         Concurrency: Go vs. Node 
+      
+    </title>
+    <link rel="canonical" href="https://jj-coding-emporium.github.io/posts/concurrency-go-vs-node/">
+
+    <style>
+  * {
+    border:0;
+    font:inherit;
+    font-size:100%;
+    vertical-align:baseline;
+    margin:0;
+    padding:0;
+    color: black;
+    text-decoration-skip: ink;
+  }
+
+  body {
+    font-family:'Open Sans', 'Myriad Pro', Myriad, sans-serif;
+    font-size:17px;
+    line-height:160%;
+    color:#1d1313;
+    max-width:700px;
+    margin:auto;
+  }
+
+  p {
+    margin: 20px 0;
+  }
+
+  a img {
+    border:none;
+  }
+
+  img {
+    margin: 10px auto 10px auto;
+    max-width: 100%;
+    display: block;
+  }
+
+  .left-justify {
+    float: left;
+  }
+
+  .right-justify {
+    float:right;
+  }
+
+  pre, code {
+    font: 12px Consolas, "Liberation Mono", Menlo, Courier, monospace;
+    background-color: #f7f7f7;
+  }
+
+  code {
+    font-size: 12px;
+    padding: 4px;
+  }
+
+  pre {
+    margin-top: 0;
+    margin-bottom: 16px;
+    word-wrap: normal;
+    padding: 16px;
+    overflow: auto;
+    font-size: 85%;
+    line-height: 1.45;
+  }
+
+  pre>code {
+    padding: 0;
+    margin: 0;
+    font-size: 100%;
+    word-break: normal;
+    white-space: pre;
+    background: transparent;
+    border: 0;
+  }
+
+  pre code {
+    display: inline;
+    max-width: auto;
+    padding: 0;
+    margin: 0;
+    overflow: visible;
+    line-height: inherit;
+    word-wrap: normal;
+    background-color: transparent;
+    border: 0;
+  }
+
+  pre code::before,
+  pre code::after {
+    content: normal;
+  }
+
+  em,q,em,dfn {
+    font-style:italic;
+  }
+
+  .sans,html .gist .gist-file .gist-meta {
+    font-family:"Open Sans","Myriad Pro",Myriad,sans-serif;
+  }
+
+  .mono,pre,code,tt,p code,li code {
+    font-family:Menlo,Monaco,"Andale Mono","lucida console","Courier New",monospace;
+  }
+
+  .heading,.serif,h1,h2,h3 {
+    font-family:"Old Standard TT",serif;
+  }
+
+  strong {
+    font-weight:600;
+  }
+
+  q:before {
+    content:"\201C";
+  }
+
+  q:after {
+    content:"\201D";
+  }
+
+  del,s {
+    text-decoration:line-through;
+  }
+
+  blockquote {
+    font-family:"Old Standard TT",serif;
+    text-align:center;
+    padding:50px;
+  }
+
+  blockquote p {
+    display:inline-block;
+    font-style:italic;
+  }
+
+  blockquote:before,blockquote:after {
+    font-family:"Old Standard TT",serif;
+    content:'\201C';
+    font-size:35px;
+    color:#403c3b;
+  }
+
+  blockquote:after {
+    content:'\201D';
+  }
+
+  hr {
+    width:40%;
+    height: 1px;
+    background:#403c3b;
+    margin: 25px auto;
+  }
+
+  h1 {
+    font-size:35px;
+  }
+
+  h2 {
+    font-size:28px;
+  }
+
+  h3 {
+    font-size:22px;
+    margin-top:18px;
+  }
+
+  h1 a,h2 a,h3 a {
+    text-decoration:none;
+  }
+
+  h1,h2 {
+    margin-top:28px;
+  }
+
+  #sub-header, time {
+    color:#403c3b;
+    font-size:13px;
+  }
+
+  #sub-header {
+    margin: 0 4px;
+  }
+
+  #nav h1 a {
+    font-size:35px;
+    color:#1d1313;
+    line-height:120%;
+  }
+
+  .posts_listing a,#nav a {
+    text-decoration: none;
+  }
+
+  li {
+    margin-left: 20px;
+  }
+
+  ul li {
+    margin-left: 5px;
+  }
+
+  ul li {
+    list-style-type: none;
+  }
+  ul li:before {
+    content:"\00BB \0020";
+  }
+
+  #nav ul li:before, .posts_listing li:before {
+    content:'';
+    margin-right:0;
+  }
+
+  #content {
+    text-align:left;
+    width:100%;
+    font-size:15px;
+    padding:60px 0 80px;
+  }
+
+  #content h1,#content h2 {
+    margin-bottom:5px;
+  }
+
+  #content h2 {
+    font-size:25px;
+  }
+
+  #content .entry-content {
+    margin-top:15px;
+  }
+
+  #content time {
+    margin-left:3px;
+  }
+
+  #content h1 {
+    font-size:30px;
+  }
+
+  .highlight {
+    margin: 10px 0;
+  }
+
+  .posts_listing {
+    margin:0 0 50px;
+  }
+
+  .posts_listing li {
+    margin:0 0 25px 15px;
+  }
+
+  .posts_listing li a:hover,#nav a:hover {
+    text-decoration: underline;
+  }
+
+  #nav {
+    text-align:center;
+    position:static;
+    margin-top:60px;
+  }
+
+  #nav ul {
+    display: table;
+    margin: 8px auto 0 auto;
+  }
+
+  #nav li {
+    list-style-type:none;
+    display:table-cell;
+    font-size:15px;
+    padding: 0 20px;
+  }
+
+  #links {
+    margin: 50px 0 0 0;
+  }
+
+  #links :nth-child(2) {
+    float:right;
+  }
+
+  #not-found {
+    text-align: center;
+  }
+
+  #not-found a {
+    font-family:"Old Standard TT",serif;
+    font-size: 200px;
+    text-decoration: none;
+    display: inline-block;
+    padding-top: 225px;
+  }
+
+  @media (max-width: 750px) {
+    body {
+      padding-left:20px;
+      padding-right:20px;
+    }
+
+    #nav h1 a {
+      font-size:28px;
+    }
+
+    #nav li {
+      font-size:13px;
+      padding: 0 15px;
+    }
+
+    #content {
+      margin-top:0;
+      padding-top:50px;
+      font-size:14px;
+    }
+
+    #content h1 {
+      font-size:25px;
+    }
+
+    #content h2 {
+      font-size:22px;
+    }
+
+    .posts_listing li div {
+      font-size:12px;
+    }
+  }
+
+  @media (max-width: 400px) {
+    body {
+      padding-left:20px;
+      padding-right:20px;
+    }
+
+    #nav h1 a {
+      font-size:22px;
+    }
+
+    #nav li {
+      font-size:12px;
+      padding: 0 10px;
+    }
+
+    #content {
+      margin-top:0;
+      padding-top:20px;
+      font-size:12px;
+    }
+
+    #content h1 {
+      font-size:20px;
+    }
+
+    #content h2 {
+      font-size:18px;
+    }
+
+    .posts_listing li div{
+      font-size:12px;
+    }
+  }
+</style>
+
+
+    
+  </head>
+
+  <body>
+    <section id=nav>
+      <h1><a href="https://jj-coding-emporium.github.io/">Coding Emporium</a></h1>
+      <ul>
+        
+      </ul>
+    </section>
+
+
+<section id=content>
+  <h1> Concurrency: Go vs. Node </h1>
+
+  
+    <div id=sub-header>
+      November 2018 · 2 minute read
+    </div>
+  
+
+  <div class="entry-content">
+    
+
+<h1 id="go">Go</h1>
+
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 0
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="display:block;width:100%;background-color:#e5e5e5"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span></span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="display:block;width:100%;background-color:#e5e5e5"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span></span><span style="display:block;width:100%;background-color:#e5e5e5"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span></span><span style="display:block;width:100%;background-color:#e5e5e5"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span></span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">29
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">30
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">31
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#080;font-weight:bold">package</span> main
+
+<span style="color:#080;font-weight:bold">import</span> (
+	<span style="background-color:#fff0f0">&#34;io/ioutil&#34;</span>
+	<span style="background-color:#fff0f0">&#34;log&#34;</span>
+	<span style="background-color:#fff0f0">&#34;net/http&#34;</span>
+
+<span style="display:block;width:100%;background-color:#e5e5e5">	<span style="background-color:#fff0f0">&#34;github.com/gorilla/mux&#34;</span>
+</span>)
+
+<span style="color:#080;font-weight:bold">func</span> <span style="color:#06b;font-weight:bold">getUser</span>(username <span style="color:#339;font-weight:bold">string</span>) <span style="color:#339;font-weight:bold">string</span> {
+	response, _ <span style="color:#333">:=</span> http.<span style="color:#06b;font-weight:bold">Get</span>(<span style="background-color:#fff0f0">&#34;https://api.github.com/users/&#34;</span> <span style="color:#333">+</span> username)
+	responseData, _ <span style="color:#333">:=</span> ioutil.<span style="color:#06b;font-weight:bold">ReadAll</span>(response.Body)
+	userData <span style="color:#333">:=</span> <span style="color:#007020">string</span>(responseData)
+<span style="display:block;width:100%;background-color:#e5e5e5">	<span style="color:#080;font-weight:bold">return</span> userData
+</span><span style="display:block;width:100%;background-color:#e5e5e5">}
+</span><span style="display:block;width:100%;background-color:#e5e5e5">
+</span><span style="color:#080;font-weight:bold">func</span> <span style="color:#06b;font-weight:bold">GithubHandler</span>(w http.ResponseWriter, req <span style="color:#333">*</span>http.Request) {
+	params <span style="color:#333">:=</span> mux.<span style="color:#06b;font-weight:bold">Vars</span>(req)
+	username <span style="color:#333">:=</span> params[<span style="background-color:#fff0f0">&#34;username&#34;</span>]
+	w.<span style="color:#06b;font-weight:bold">WriteHeader</span>(http.StatusOK)
+	userData <span style="color:#333">:=</span> <span style="color:#06b;font-weight:bold">getUser</span>(username)
+	log.<span style="color:#06b;font-weight:bold">Println</span>(userData)
+}
+
+<span style="color:#080;font-weight:bold">func</span> <span style="color:#06b;font-weight:bold">main</span>() {
+	router <span style="color:#333">:=</span> mux.<span style="color:#06b;font-weight:bold">NewRouter</span>()
+	router.<span style="color:#06b;font-weight:bold">PathPrefix</span>(<span style="background-color:#fff0f0">&#34;/&#34;</span>).<span style="color:#06b;font-weight:bold">Handler</span>(http.<span style="color:#06b;font-weight:bold">FileServer</span>(http.<span style="color:#06b;font-weight:bold">Dir</span>(<span style="background-color:#fff0f0">&#34;static&#34;</span>)))
+	router.<span style="color:#06b;font-weight:bold">HandleFunc</span>(<span style="background-color:#fff0f0">&#34;/github/{username}&#34;</span>, GithubHandler)
+	log.<span style="color:#06b;font-weight:bold">Println</span>(<span style="background-color:#fff0f0">&#34;Listening on port 8080&#34;</span>)
+	http.<span style="color:#06b;font-weight:bold">ListenAndServe</span>(<span style="background-color:#fff0f0">&#34;:8080&#34;</span>, router)
+}</code></pre></td></tr></table>
+</div>
+</div>
+
+<h1 id="node">Node</h1>
+
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 0
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="display:block;width:100%;background-color:#e5e5e5"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span></span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="display:block;width:100%;background-color:#e5e5e5"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span></span><span style="display:block;width:100%;background-color:#e5e5e5"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span></span><span style="display:block;width:100%;background-color:#e5e5e5"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span></span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">29
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">30
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">31
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">32
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">33
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">34
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">35
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">36
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">37
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">38
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">39
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">40
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">41
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">42
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">43
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">44
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#080;font-weight:bold">const</span> createNode <span style="color:#333">=</span> val =&gt; ({
+  val,
+  left<span style="color:#333">:</span> <span style="color:#080;font-weight:bold">null</span>,
+  right<span style="color:#333">:</span> <span style="color:#080;font-weight:bold">null</span>
+})
+
+<span style="color:#080;font-weight:bold">const</span> search <span style="color:#333">=</span> (node, val) =&gt; {
+<span style="display:block;width:100%;background-color:#e5e5e5">  <span style="color:#080;font-weight:bold">if</span> (node <span style="color:#333">===</span> <span style="color:#080;font-weight:bold">null</span>) <span style="color:#080;font-weight:bold">return</span> <span style="color:#080;font-weight:bold">null</span>
+</span>  <span style="color:#080;font-weight:bold">else</span> <span style="color:#080;font-weight:bold">if</span> (val <span style="color:#333">===</span> node.val) <span style="color:#080;font-weight:bold">return</span> node
+  <span style="color:#080;font-weight:bold">else</span> <span style="color:#080;font-weight:bold">if</span> (val <span style="color:#333">&lt;</span> node.val) <span style="color:#080;font-weight:bold">return</span> search(node.left, val)
+  <span style="color:#080;font-weight:bold">else</span> <span style="color:#080;font-weight:bold">if</span> (val <span style="color:#333">&gt;</span> node.val) <span style="color:#080;font-weight:bold">return</span> search(node.right, val)
+}
+
+<span style="color:#080;font-weight:bold">const</span> insertNode <span style="color:#333">=</span> (node, newNode) =&gt; {
+<span style="display:block;width:100%;background-color:#e5e5e5">  <span style="color:#080;font-weight:bold">if</span> (newNode.val <span style="color:#333">&lt;</span> node.val) {
+</span><span style="display:block;width:100%;background-color:#e5e5e5">    <span style="color:#080;font-weight:bold">if</span> (node.left <span style="color:#333">===</span> <span style="color:#080;font-weight:bold">null</span>) {
+</span><span style="display:block;width:100%;background-color:#e5e5e5">      node.left <span style="color:#333">=</span> newNode
+</span>    } <span style="color:#080;font-weight:bold">else</span> insertNode(node.left, newNode)
+  } <span style="color:#080;font-weight:bold">else</span> {
+    <span style="color:#080;font-weight:bold">if</span> (node.right <span style="color:#333">===</span> <span style="color:#080;font-weight:bold">null</span>) {
+      node.right <span style="color:#333">=</span> newNode
+    } <span style="color:#080;font-weight:bold">else</span> insertNode(node.right, newNode)
+  }
+}
+
+<span style="color:#080;font-weight:bold">const</span> createBST <span style="color:#333">=</span> () =&gt; {
+  <span style="color:#080;font-weight:bold">let</span> root <span style="color:#333">=</span> <span style="color:#080;font-weight:bold">null</span>
+  <span style="color:#080;font-weight:bold">return</span> {
+    insert<span style="color:#333">:</span> <span style="color:#080;font-weight:bold">function</span> (val) {
+      <span style="color:#080;font-weight:bold">const</span> node <span style="color:#333">=</span> createNode(val)
+      <span style="color:#080;font-weight:bold">if</span> (root <span style="color:#333">===</span> <span style="color:#080;font-weight:bold">null</span>) root <span style="color:#333">=</span> node
+      <span style="color:#080;font-weight:bold">else</span> insertNode(root, node)
+      <span style="color:#080;font-weight:bold">return</span> <span style="color:#080;font-weight:bold">this</span>
+    },
+    find<span style="color:#333">:</span> val =&gt; search(root, val),
+    contains<span style="color:#333">:</span> val =&gt; search(root, val) <span style="color:#333">!=</span> <span style="color:#080;font-weight:bold">null</span>,
+    <span style="color:#080;font-weight:bold">delete</span><span style="color:#333">:</span> val =&gt; {
+      <span style="color:#888">// todo
+</span><span style="color:#888"></span>    },
+    getTree<span style="color:#333">:</span> () =&gt; root
+  }
+}
+
+module.exports <span style="color:#333">=</span> createBST
+</code></pre></td></tr></table>
+</div>
+</div>
+
+  </div>
+
+  <div id=links>
+    
+    
+  </div>
+</section>
+
+
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker
+      .register('/sw.js', { scope: '/' })
+      .then(function (registration) {
+        console.log('Service Worker Registered');
+      });
+
+    navigator.serviceWorker
+      .ready
+      .then(function (registration) {
+        console.log('Service Worker Ready');
+      });
+  }
+</script>
+</body>
+
+</html>
+
+

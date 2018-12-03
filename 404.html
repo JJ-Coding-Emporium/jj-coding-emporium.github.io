@@ -16,6 +16,7 @@
     <link rel="icon" type="image/png" href="https://jj-coding-emporium.github.io/favicon_16x16.png" sizes="16x16">
     <link rel="icon" type="image/png" href="https://jj-coding-emporium.github.io/favicon_32x32.png" sizes="32x32">
     <link rel="icon" type="image/png" href="https://jj-coding-emporium.github.io/favicon_128x128.png" sizes="128x128">
+    <link rel="manifest" href="https://jj-coding-emporium.github.io/manifest.json">
 
     <title>
       
@@ -401,7 +402,22 @@
   <section id=not-found>
     <a href=/>404</a>
   </section>
-  
-</body>
-</html>
 
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker
+      .register('/sw.js', { scope: '/' })
+      .then(function (registration) {
+        console.log('Service Worker Registered');
+      });
+
+    navigator.serviceWorker
+      .ready
+      .then(function (registration) {
+        console.log('Service Worker Ready');
+      });
+  }
+</script>
+</body>
+
+</html>
