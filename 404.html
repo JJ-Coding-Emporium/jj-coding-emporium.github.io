@@ -404,19 +404,16 @@
   </section>
 
 <script>
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker
-      .register('/sw.js', { scope: '/' })
-      .then(function (registration) {
-        console.log('Service Worker Registered');
-      });
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('service-worker.js');
+}
 
-    navigator.serviceWorker
-      .ready
-      .then(function (registration) {
-        console.log('Service Worker Ready');
-      });
-  }
+document.querySelector('#show').addEventListener('click', () => {
+  const iconUrl = document.querySelector('select').selectedOptions[0].value;
+  let imgElement = document.createElement('img');
+  imgElement.src = iconUrl;
+  document.querySelector('#container').appendChild(imgElement);
+});
 </script>
 </body>
 
