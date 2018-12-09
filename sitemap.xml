@@ -3,11 +3,6 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>https://jj-coding-emporium.github.io/posts/monad/</loc>
-    <lastmod>2018-12-07T19:40:26-08:00</lastmod>
-  </url>
-  
-  <url>
     <loc>https://jj-coding-emporium.github.io/posts/concurrency-go-vs-node/</loc>
     <lastmod>2018-11-27T08:13:10-08:00</lastmod>
   </url>
@@ -19,13 +14,13 @@
   
   <url>
     <loc>https://jj-coding-emporium.github.io/</loc>
-    <lastmod>2018-12-07T19:40:26-08:00</lastmod>
+    <lastmod>2018-11-27T08:13:10-08:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>https://jj-coding-emporium.github.io/posts/</loc>
-    <lastmod>2018-12-07T19:40:26-08:00</lastmod>
+    <lastmod>2018-11-27T08:13:10-08:00</lastmod>
     <priority>0</priority>
   </url>
   

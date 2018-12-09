@@ -6,20 +6,10 @@
     <description>Recent content in Posts on Coding Emporium</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Fri, 07 Dec 2018 19:40:26 -0800</lastBuildDate>
+    <lastBuildDate>Tue, 27 Nov 2018 08:13:10 -0800</lastBuildDate>
     
 	<atom:link href="https://jj-coding-emporium.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
     
-    
-    <item>
-      <title>Monad</title>
-      <link>https://jj-coding-emporium.github.io/posts/monad/</link>
-      <pubDate>Fri, 07 Dec 2018 19:40:26 -0800</pubDate>
-      
-      <guid>https://jj-coding-emporium.github.io/posts/monad/</guid>
-      <description>Disclaimer: I don&amp;rsquo;t understand monads. Which is why I&amp;rsquo;m blogging about them - perhaps I&amp;rsquo;ll understand them by the time I&amp;rsquo;m done. And perhaps you will too!
-The history of the programming monad Monads were first introduced to the programming realm by the language designers of Haskell, who were grappling with the thorny problem of IO for a pure functional programming language. What&amp;rsquo;s this problem, you ask? Well, pure languages are, by strict definition, not allowed to have or mutate state.</description>
-    </item>
     
     <item>
       <title>Concurrency: Go vs. Node</title>
