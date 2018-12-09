@@ -22,10 +22,10 @@
     <title>
       
       
-         404 Page not found 
+         Monad 
       
     </title>
-    <link rel="canonical" href="">
+    <link rel="canonical" href="https://jj-coding-emporium.github.io/posts/monad/">
 
     <style>
   * {
@@ -400,11 +400,84 @@
       </ul>
     </section>
 
-  <section id=not-found>
-    <a href=/>404</a>
-  </section>
+
+<section id=content>
+  <h1> Monad </h1>
+
+  
+    <div id=sub-header>
+      December 2018 · 2 minute read
+    </div>
+  
+
+  <div class="entry-content">
+    
+
+<p><em>Disclaimer: I don&rsquo;t understand monads. Which is why I&rsquo;m blogging about them - perhaps I&rsquo;ll understand them by the time I&rsquo;m done. And perhaps you will too!</em></p>
+
+<h2 id="the-history-of-the-programming-monad">The history of the programming monad</h2>
+
+<p>Monads were first introduced to the programming realm by the language designers of <a href="https://www.haskell.org/">Haskell</a>, who were grappling with the thorny problem of IO for a pure functional programming language. What&rsquo;s this problem, you ask? Well, pure languages are, by strict definition, not allowed to <em>have</em> or <em>mutate</em> state. For instance, this is not strictly pure (even though the function itself is pure):</p>
+
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">0
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">7
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#080;font-weight:bold">function</span> sumArray (arr) {
+  <span style="color:#080;font-weight:bold">let</span> sum <span style="color:#333">=</span> <span style="color:#00d;font-weight:bold">0</span>
+  <span style="color:#080;font-weight:bold">for</span> (<span style="color:#080;font-weight:bold">let</span> i <span style="color:#333">=</span> <span style="color:#00d;font-weight:bold">0</span>; i <span style="color:#333">&lt;</span> arr.length; i<span style="color:#333">++</span>) {
+    sum <span style="color:#333">+=</span> arr[i]
+  }
+  <span style="color:#080;font-weight:bold">return</span> sum
+}
+</code></pre></td></tr></table>
+</div>
+</div>
+
+<p>The function <code>sumArray</code> is pure, since for any given input, it&rsquo;ll always return the same output, but its implementation is impure, as it changes (mutates) the variables <code>sum</code> and <code>i</code> inside the for loop. In fact, pure functional languages don&rsquo;t have variables or loops of any kind.</p>
+
+<p>The problem with IO is that it is, by its nature, impure. Imagine calling a synchronous function <code>readIO</code> that takes a filename as input.
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">0
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript">  <span style="color:#080;font-weight:bold">const</span> contents <span style="color:#333">=</span> readIO(<span style="background-color:#fff0f0">&#39;name-of-file.txt&#39;</span>)
+</code></pre></td></tr></table>
+</div>
+</div></p>
+
+<p>There&rsquo;s no telling what <code>contents</code> will be. The file could have changed, it could not exist, etc.</p>
+
+<p>They realized that monads provide an elegant and efficient way to solve the thorny problem of IO for a pure functional programming language.</p>
+
+<blockquote class="twitter-tweet"><p lang="en" dir="ltr">Once you understand monads, you lose the ability to explain them to others <a href="https://twitter.com/aahoogendoorn?ref_src=twsrc%5Etfw">@aahoogendoorn</a> *explaining monads* at <a href="https://twitter.com/hashtag/BuildStuffES?src=hash&amp;ref_src=twsrc%5Etfw">#BuildStuffES</a> <a href="https://t.co/ni3MkWeOlp">pic.twitter.com/ni3MkWeOlp</a></p>&mdash; Randy Shoup (@randyshoup) <a href="https://twitter.com/randyshoup/status/992773186239516677?ref_src=twsrc%5Etfw">May 5, 2018</a></blockquote>
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+
+  </div>
+
+  <div id=links>
+    
+      <a class="basic-alignment left" href="https://jj-coding-emporium.github.io/posts/concurrency-go-vs-node/">&laquo; Concurrency: Go vs. Node</a>
+    
+    
+  </div>
+</section>
+
 
 
 </body>
 
 </html>
+
+
